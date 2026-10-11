@@ -27,6 +27,8 @@ fun ShopExpApp(
     modifier: Modifier = Modifier,
     rating: AppRating = AppRating.Good,
     step: AppStep = AppStep.CHOOSE_RATING,
+    onInfoClicked : () -> Unit = {},
+    onCloseClicked : () -> Unit = {},
 ) {
 
     var appStep by rememberSaveable { mutableStateOf(step) }
@@ -51,8 +53,8 @@ fun ShopExpApp(
         containerColor = animatedColor,
         topBar = {
             IconsAppBar(
-                onInfoClicked = {},
-                onCloseClicked = {}
+                onInfoClicked = onInfoClicked,
+                onCloseClicked = onCloseClicked
             )
         },
         content = { innerPadding ->
@@ -82,7 +84,15 @@ fun ShopExpApp(
                             animatedVisibilityScope = this@AnimatedContent,
                             sharedTransitionScope = this@SharedTransitionLayout,
                         )
-                        AppStep.SUBMITTED -> SubmittedContent()
+                        AppStep.SUBMITTED -> SubmittedContent(
+                            value = ratingValue,
+                            animatedVisibilityScope = this@AnimatedContent,
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            onShoppingContinued = {
+                                appStep = step
+                                ratingValue = rating.rating
+                            }
+                        )
                     }
                 }
             }
