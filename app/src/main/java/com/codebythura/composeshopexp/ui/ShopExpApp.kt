@@ -67,8 +67,21 @@ fun ShopExpApp(
                     transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
                 ) { targetState ->
                     when(targetState) {
-                        AppStep.CHOOSE_RATING -> ChooseRatingContent()
-                        AppStep.ENTER_NOTE -> EnterNoteContent()
+                        AppStep.CHOOSE_RATING -> ChooseRatingContent(
+                            value = ratingValue,
+                            onValueChanged = { ratingValue = it },
+                            onAddNoteClicked = { appStep = AppStep.ENTER_NOTE },
+                            animatedVisibilityScope = this@AnimatedContent,
+                            sharedTransitionScope = this@SharedTransitionLayout
+                        )
+                        AppStep.ENTER_NOTE -> EnterNoteContent(
+                            value = ratingValue,
+                            text = "",
+                            onTextChange = {},
+                            onNoteSubmit = { appStep = AppStep.SUBMITTED },
+                            animatedVisibilityScope = this@AnimatedContent,
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                        )
                         AppStep.SUBMITTED -> SubmittedContent()
                     }
                 }
